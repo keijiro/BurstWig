@@ -8,80 +8,30 @@ namespace BurstWig
 {
     public class WigController : MonoBehaviour
     {
-        #region Editor-only parameters
+        #region Editable attributes
 
         [SerializeField] MeshRenderer _source = null;
         [SerializeField] VisualEffect _target = null;
         [SerializeField, Range(8, 256)] int _segmentCount = 64;
+        [SerializeField] WigProfile _profile = null;
         [SerializeField] uint _randomSeed = 0;
 
         #endregion
 
-        #region Dynamics parameters
-
-        [SerializeField, Range(0.01f, 5)] float _length = 1;
-
-        public float length {
-            get => _length;
-            set => _length = value;
-        }
-
-        [SerializeField, Range(0, 1)] float _lengthRandomness = 0.5f;
-
-        public float lengthRandomness {
-            get => _lengthRandomness;
-            set => _lengthRandomness = value;
-        }
-
-        [SerializeField] float _spring = 600;
-
-        public float spring {
-            get => _spring;
-            set => _spring = value;
-        }
-
-        [SerializeField] float _damping = 30;
-
-        public float damping {
-            get => _damping;
-            set => _damping = value;
-        }
-
-        [SerializeField] Vector3 _gravity = new Vector3(0, -8, 2);
-
-        public Vector3 gravity {
-            get => _gravity;
-            set => _gravity = value;
-        }
-
-        [SerializeField] float _noiseAmplitude = 5;
-
-        public float noiseAmplitude {
-            get => _noiseAmplitude;
-            set => _noiseAmplitude = value;
-        }
-
-        [SerializeField] float _noiseFrequency = 1;
-
-        public float noiseFrequency {
-            get => _noiseFrequency;
-            set => _noiseFrequency = value;
-        }
-
-        [SerializeField] float _noiseSpeed = 0.1f;
-
-        public float noiseSpeed {
-            get => _noiseSpeed;
-            set => _noiseSpeed = value;
-        }
-
-        #endregion
-
-        #region Data buffer
+        #region Internal buffers
 
         NativeArray<float4> _position;
         NativeArray<float3> _velocity;
         Texture2D _positionMap;
+
+        #endregion
+
+        #region Private function
+
+        float SegmentLength(int index)
+          => (1 - Utility.Random(_randomSeed, (uint)index)
+                  * _profile.lengthRandomness)
+             * _profile.length / _segmentCount;
 
         #endregion
 
@@ -96,37 +46,32 @@ namespace BurstWig
 
         NativeArray<Template> _template;
 
-        void InitializeTemplate(Mesh mesh)
+        void SetUpTemplate(Mesh mesh)
         {
             var vertices = mesh.vertices;
             var normals = mesh.normals;
 
             for (var vi = 0; vi < vertices.Length; vi++)
             {
+                // Initialize a template vertex.
                 var p = vertices[vi];
                 var n = normals[vi];
-
                 _template[vi] = new Template { position = p, normal = n };
 
+                // Initialize vertices under this template vertex.
                 var i = vi * _segmentCount;
-
-                var seglen = SegmentLength(vi);
-
+                var seg = SegmentLength(vi);
                 for (var si = 0; si < _segmentCount; si++)
                 {
                     _position[i++] = math.float4(p, 1);
-                    p += n * seglen;
+                    p += n * seg;
                 }
             }
         }
 
         #endregion
 
-        #region Private functions
-
-        float SegmentLength(int index)
-          => (1 - Utility.Random(_randomSeed, (uint)index) * _lengthRandomness)
-             * _length / _segmentCount;
+        #region Wig dynamics
 
         void RunDynamics()
         {
@@ -139,8 +84,7 @@ namespace BurstWig
             for (var vi = 0; vi < vcount; vi++)
             {
                 var i = vi * scount;
-
-                var seglen = SegmentLength(vi);
+                var seg = SegmentLength(vi);
 
                 // The first vertex
                 var p = _template[vi].position;
@@ -153,7 +97,7 @@ namespace BurstWig
 
                 // The second vertex
 
-                p += _template[vi].normal * seglen;
+                p += _template[vi].normal * seg;
 
                 _position[i++] = math.float4(p, 1);
                 p_prev = p;
@@ -167,7 +111,7 @@ namespace BurstWig
                     p += v * dt;
 
                     // Segment length constraint
-                    p = p_prev + math.normalize(p - p_prev) * seglen;
+                    p = p_prev + math.normalize(p - p_prev) * seg;
 
                     _position[i++] = math.float4(p, 1);
                     p_prev = p;
@@ -179,7 +123,7 @@ namespace BurstWig
             {
                 var i = vi * scount;
 
-                var seglen = SegmentLength(vi);
+                var seg = SegmentLength(vi);
 
                 var p_prev = _position[i].xyz;
                 var p_his2 = p_prev;
@@ -194,16 +138,16 @@ namespace BurstWig
                     var v = _velocity[i];
 
                     // Damping
-                    v *= math.exp(-_damping * dt);
+                    v *= math.exp(-_profile.damping * dt);
 
                     // Target position
-                    var p_t = p_prev + math.normalizesafe(p_prev - p_his4) * seglen;
+                    var p_t = p_prev + math.normalizesafe(p_prev - p_his4) * seg;
 
                     // Acceleration (spring model)
-                    v += (p_t - p) * dt * _spring;
+                    v += (p_t - p) * dt * _profile.spring;
 
                     // Gravity
-                    v += (float3)_gravity * dt;
+                    v += (float3)_profile.gravity * dt;
 
                     _velocity[i++] = v;
                     p_his4 = p_his3;
@@ -227,7 +171,7 @@ namespace BurstWig
             _position = Utility.NewBuffer<float4>(vcount, _segmentCount);
             _velocity = Utility.NewBuffer<float3>(vcount, _segmentCount);
 
-            InitializeTemplate(mesh);
+            SetUpTemplate(mesh);
 
             _positionMap = new Texture2D(_segmentCount, vcount,
                                          TextureFormat.RGBAFloat, false);
