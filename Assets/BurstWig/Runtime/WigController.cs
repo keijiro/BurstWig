@@ -33,6 +33,20 @@ namespace BurstWig
                   * _profile.lengthRandomness)
              * _profile.length / _segmentCount;
 
+        float3 NoiseField(float3 p)
+        {
+            var pos = p * _profile.noiseFrequency;
+
+            var offs1 = math.float3(0, 1, 0) * _profile.noiseSpeed * Time.time;
+            var offs2 = math.float3(3, 1, 7) * math.PI - offs1.zyx;
+
+            float3 grad1, grad2;
+            noise.snoise(pos + offs1, out grad1);
+            noise.snoise(pos + offs2, out grad2);
+
+            return math.cross(grad1, grad2) * _profile.noiseAmplitude;
+        }
+
         #endregion
 
         #region Template data structure
@@ -148,6 +162,9 @@ namespace BurstWig
 
                     // Gravity
                     v += (float3)_profile.gravity * dt;
+
+                    // Noise field
+                    v += NoiseField(p) * dt;
 
                     _velocity[i++] = v;
                     p_his4 = p_his3;

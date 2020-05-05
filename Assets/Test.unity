@@ -553,13 +553,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionAmount:
-    x: 5
-    y: 5
-    z: 5
+    x: 1
+    y: 1
+    z: 1
   rotationAmount:
-    x: 180
-    y: 180
-    z: 180
+    x: 90
+    y: 90
+    z: 90
   frequency: 0.1
   octaves: 2
 --- !u!23 &1991967225

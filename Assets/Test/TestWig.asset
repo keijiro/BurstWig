@@ -15,7 +15,7 @@ MonoBehaviour:
   length: 3
   lengthRandomness: 0.5
   spring: 600
-  damping: 30
+  damping: 80
   gravity: {x: 0, y: -8, z: 2}
   noiseAmplitude: 5
   noiseFrequency: 1
