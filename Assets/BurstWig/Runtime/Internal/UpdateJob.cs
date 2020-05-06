@@ -5,11 +5,16 @@ using Unity.Mathematics;
 namespace BurstWig
 {
     [Unity.Burst.BurstCompile(CompileSynchronously = true)]
-    struct UpdateJob : IJob
+    struct UpdateJob : IJobFor
     {
         // Buffers
+        [NativeDisableParallelForRestrictionAttribute]
         public NativeArray<RootPoint> R;
+
+        [NativeDisableParallelForRestrictionAttribute]
         public NativeArray<float4> P;
+
+        [NativeDisableParallelForRestrictionAttribute]
         public NativeArray<float3> V;
 
         // Settings
@@ -20,11 +25,6 @@ namespace BurstWig
         public float4x4 tf;
         public float t;
         public float dt;
-
-        float SegmentLength(int index)
-          => (1 - Utility.Random(seed, (uint)index)
-                  * prof.lengthRandomness)
-             * prof.length / (P.Length / R.Length);
 
         float3 NoiseField(float3 p)
         {
@@ -40,88 +40,69 @@ namespace BurstWig
             return math.cross(grad1, grad2) * prof.noiseAmplitude;
         }
 
-        public void Execute()
+        public void Execute(int vi)
         {
-            var vcount = R.Length;
-            var scount = P.Length / vcount;
+            var scount = P.Length / R.Length;
 
+            // Segment length
+            var seg = math.frac((seed + vi * 0.012817f) * 632.8133f); // PRNG
+            seg = (1 - seg * prof.lengthRandomness) * prof.length / scount;
+
+            //
             // Position update
-            for (var vi = 0; vi < vcount; vi++)
+            //
+
+            var i = vi * scount;
+
+            // The first vertex (root point, transform only)
+            var p = math.mul(tf, math.float4(R[vi].position, 1)).xyz;
+            P[i++] = math.float4(p, 1);
+
+            // The second vertex (no dynamics)
+            p += R[vi].normal * seg;
+            P[i++] = math.float4(p, 1);
+
+            // Following vertices
+            for (var si = 2; si < scount; si++)
             {
-                var i = vi * scount;
-                var seg = SegmentLength(vi);
-
-                // The first vertex
-                var p = R[vi].position;
-                var v = float3.zero;
-
-                p = math.mul(tf, math.float4(p, 1)).xyz;
-
+                // Newtonian motion
+                var p_n = P[i].xyz + V[i] * dt;
+                // Segment length constraint
+                p += math.normalize(p_n - p) * seg;
                 P[i++] = math.float4(p, 1);
-                var p_prev = p;
-
-                // The second vertex
-
-                p += R[vi].normal * seg;
-
-                P[i++] = math.float4(p, 1);
-                p_prev = p;
-
-                for (var si = 2; si < scount; si++)
-                {
-                    p = P[i].xyz;
-                    v = V[i];
-
-                    // Newtonian motion
-                    p += v * dt;
-
-                    // Segment length constraint
-                    p = p_prev + math.normalize(p - p_prev) * seg;
-
-                    P[i++] = math.float4(p, 1);
-                    p_prev = p;
-                }
             }
 
-            // Velocity
-            for (var vi = 0; vi < vcount; vi++)
+            //
+            // Velocity Update
+            //
+
+            i = vi * scount + 2; // Starts from the third vertex.
+
+            for (var si = 2; si < scount; si++)
             {
-                var i = vi * scount;
-                var seg = SegmentLength(vi);
+                var v = V[i];
 
-                var p_prev = P[i].xyz;
-                var p_his2 = p_prev;
-                var p_his3 = p_prev;
-                var p_his4 = p_prev;
+                // Vertex references
+                var p0 = P[i].xyz;
+                var p1 = P[i - 1].xyz;
+                var p4 = P[i - math.min(si, 4)].xyz;
 
-                i++;
+                // Damping
+                v *= math.exp(-prof.damping * dt);
 
-                for (var si = 1; si < scount; si++)
-                {
-                    var p = P[i].xyz;
-                    var v = V[i];
+                // Target position
+                var p_t = p1 + math.normalizesafe(p1 - p4) * seg;
 
-                    // Damping
-                    v *= math.exp(-prof.damping * dt);
+                // Acceleration (spring model)
+                v += (p_t - p0) * dt * prof.spring;
 
-                    // Target position
-                    var p_t = p_prev + math.normalizesafe(p_prev - p_his4) * seg;
+                // Gravity
+                v += (float3)prof.gravity * dt;
 
-                    // Acceleration (spring model)
-                    v += (p_t - p) * dt * prof.spring;
+                // Noise field
+                v += NoiseField(p0) * dt;
 
-                    // Gravity
-                    v += (float3)prof.gravity * dt;
-
-                    // Noise field
-                    v += NoiseField(p) * dt;
-
-                    V[i++] = v;
-                    p_his4 = p_his3;
-                    p_his3 = p_his2;
-                    p_his2 = p_prev;
-                    p_prev = p;
-                }
+                V[i++] = v;
             }
         }
     }

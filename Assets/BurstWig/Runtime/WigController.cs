@@ -34,9 +34,14 @@ namespace BurstWig
             var mesh = _source.GetComponent<MeshFilter>().sharedMesh;
             var vcount = mesh.vertexCount;
 
-            _rootPoints = Utility.NewBuffer<RootPoint>(vcount, 1);
-            _positionBuffer = Utility.NewBuffer<float4>(vcount, _segmentCount);
-            _velocityBuffer = Utility.NewBuffer<float3>(vcount, _segmentCount);
+            _rootPoints = new NativeArray<RootPoint>
+              (vcount, Allocator.Persistent);
+
+            _positionBuffer = new NativeArray<float4>
+              (vcount * _segmentCount, Allocator.Persistent);
+
+            _velocityBuffer = new NativeArray<float3>
+              (vcount * _segmentCount, Allocator.Persistent);
 
             var vertices = mesh.vertices;
             var normals = mesh.normals;
@@ -80,7 +85,8 @@ namespace BurstWig
                 dt = Time.deltaTime
             };
 
-            job.Run();
+            job.ScheduleParallel
+                (_rootPoints.Length, 1, default(JobHandle)).Complete();
 
             _positionMap.LoadRawTextureData(_positionBuffer);
             _positionMap.Apply();
