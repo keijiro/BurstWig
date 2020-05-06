@@ -26,6 +26,64 @@ namespace BurstWig
         public float t;
         public float dt;
 
+        public void Execute(int vi)
+        {
+            // Number of the segments
+            var scount = P.Length / R.Length;
+
+            // Per-filament random segment length
+            var seg = math.frac((seed + vi * 0.012817f) * 632.8133f); // PRNG
+            seg = (1 - seg * prof.lengthRandomness) * prof.length / scount;
+
+            // Offset in the position/velocity buffer.
+            var offs = vi * scount;
+
+            // The first vertex (root point, transform only)
+            var p = math.mul(tf, math.float4(R[vi].position, 1)).xyz;
+            P[offs++] = math.float4(p, 1);
+
+            // The second vertex (no dynamics)
+            p += R[vi].normal * seg;
+            P[offs++] = math.float4(p, 1);
+
+            // Following vertices
+            for (var si = 2; si < scount; si++, offs++)
+            {
+                // -- Position update
+
+                // Newtonian motion
+                var p_n = P[offs].xyz + V[offs] * dt;
+
+                // Segment length constraint
+                p += math.normalize(p_n - p) * seg;
+
+                // -- Velocity Update
+
+                // Vertex references
+                var p1 = P[offs - 1].xyz;
+                var p4 = P[offs - math.min(si, 4)].xyz;
+
+                // Damping
+                var v = V[offs] * math.exp(-prof.damping * dt);
+
+                // Target position
+                var p_t = p1 + math.normalizesafe(p1 - p4) * seg;
+
+                // Acceleration (spring model)
+                v += (p_t - p) * dt * prof.spring;
+
+                // Gravity
+                v += (float3)prof.gravity * dt;
+
+                // Noise field
+                v += NoiseField(p) * dt;
+
+                // Output
+                P[offs] = math.float4(p, 1);
+                V[offs] = v;
+            }
+        }
+
         float3 NoiseField(float3 p)
         {
             var pos = p * prof.noiseFrequency;
@@ -38,72 +96,6 @@ namespace BurstWig
             noise.snoise(pos + offs2, out grad2);
 
             return math.cross(grad1, grad2) * prof.noiseAmplitude;
-        }
-
-        public void Execute(int vi)
-        {
-            var scount = P.Length / R.Length;
-
-            // Segment length
-            var seg = math.frac((seed + vi * 0.012817f) * 632.8133f); // PRNG
-            seg = (1 - seg * prof.lengthRandomness) * prof.length / scount;
-
-            //
-            // Position update
-            //
-
-            var i = vi * scount;
-
-            // The first vertex (root point, transform only)
-            var p = math.mul(tf, math.float4(R[vi].position, 1)).xyz;
-            P[i++] = math.float4(p, 1);
-
-            // The second vertex (no dynamics)
-            p += R[vi].normal * seg;
-            P[i++] = math.float4(p, 1);
-
-            // Following vertices
-            for (var si = 2; si < scount; si++)
-            {
-                // Newtonian motion
-                var p_n = P[i].xyz + V[i] * dt;
-                // Segment length constraint
-                p += math.normalize(p_n - p) * seg;
-                P[i++] = math.float4(p, 1);
-            }
-
-            //
-            // Velocity Update
-            //
-
-            i = vi * scount + 2; // Starts from the third vertex.
-
-            for (var si = 2; si < scount; si++)
-            {
-                var v = V[i];
-
-                // Vertex references
-                var p0 = P[i].xyz;
-                var p1 = P[i - 1].xyz;
-                var p4 = P[i - math.min(si, 4)].xyz;
-
-                // Damping
-                v *= math.exp(-prof.damping * dt);
-
-                // Target position
-                var p_t = p1 + math.normalizesafe(p1 - p4) * seg;
-
-                // Acceleration (spring model)
-                v += (p_t - p0) * dt * prof.spring;
-
-                // Gravity
-                v += (float3)prof.gravity * dt;
-
-                // Noise field
-                v += NoiseField(p0) * dt;
-
-                V[i++] = v;
-            }
         }
     }
 }
