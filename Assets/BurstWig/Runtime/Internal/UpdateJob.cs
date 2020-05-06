@@ -26,6 +26,22 @@ namespace BurstWig
         public float t;
         public float dt;
 
+        // Noise field variables
+        float3 noffs1;
+        float3 noffs2;
+
+        // Divergence-free noise field function
+        float3 NoiseField(float3 p)
+        {
+            p *= prof.noiseFrequency;
+
+            float3 grad1, grad2;
+            noise.snoise(p.xyz + noffs1, out grad1);
+            noise.snoise(p.yzx + noffs2, out grad2);
+
+            return math.cross(grad1, grad2) * prof.noiseAmplitude;
+        }
+
         public void Execute(int vi)
         {
             // Number of the segments
@@ -34,6 +50,10 @@ namespace BurstWig
             // Per-filament random segment length
             var seg = math.frac((seed + vi * 0.012817f) * 632.8133f); // PRNG
             seg = (1 - seg * prof.lengthRandomness) * prof.length / scount;
+
+            // Noise field settings
+            noffs1 = math.float3(0, 1, 0) * prof.noiseSpeed * t;
+            noffs2 = math.float3(3, 1, 7) * math.PI - noffs1.zyx;
 
             // Offset in the position/velocity buffer.
             var offs = vi * scount;
@@ -49,6 +69,10 @@ namespace BurstWig
             // Following vertices
             for (var si = 2; si < scount; si++, offs++)
             {
+                // Target position
+                var p4 = P[offs - math.min(si, 4)].xyz;
+                var p_t = p + math.normalizesafe(p - p4) * seg;
+
                 // -- Position update
 
                 // Newtonian motion
@@ -59,15 +83,8 @@ namespace BurstWig
 
                 // -- Velocity Update
 
-                // Vertex references
-                var p1 = P[offs - 1].xyz;
-                var p4 = P[offs - math.min(si, 4)].xyz;
-
                 // Damping
                 var v = V[offs] * math.exp(-prof.damping * dt);
-
-                // Target position
-                var p_t = p1 + math.normalizesafe(p1 - p4) * seg;
 
                 // Acceleration (spring model)
                 v += (p_t - p) * dt * prof.spring;
@@ -82,20 +99,6 @@ namespace BurstWig
                 P[offs] = math.float4(p, 1);
                 V[offs] = v;
             }
-        }
-
-        float3 NoiseField(float3 p)
-        {
-            var pos = p * prof.noiseFrequency;
-
-            var offs1 = math.float3(0, 1, 0) * prof.noiseSpeed * t;
-            var offs2 = math.float3(3, 1, 7) * math.PI - offs1.zyx;
-
-            float3 grad1, grad2;
-            noise.snoise(pos + offs1, out grad1);
-            noise.snoise(pos + offs2, out grad2);
-
-            return math.cross(grad1, grad2) * prof.noiseAmplitude;
         }
     }
 }
