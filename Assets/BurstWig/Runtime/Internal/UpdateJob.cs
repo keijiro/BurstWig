@@ -5,44 +5,39 @@ using Unity.Mathematics;
 namespace BurstWig
 {
     [Unity.Burst.BurstCompile(CompileSynchronously = true)]
-    struct WigUpdateJob : IJob
+    struct UpdateJob : IJob
     {
+        // Buffers
         public NativeArray<RootPoint> R;
         public NativeArray<float4> P;
         public NativeArray<float3> V;
 
-        public float time;
+        // Settings
+        public WigProfile prof;
+        public uint seed;
+
+        // Current state
+        public float4x4 tf;
+        public float t;
         public float dt;
 
-        public float4x4 tf;
-        public uint randomSeed;
-
-        public float length;
-        public float lengthRandomness;
-        public float damping;
-        public float spring;
-        public float3 gravity;
-        public float noiseFrequency;
-        public float noiseAmplitude;
-        public float noiseSpeed;
-
         float SegmentLength(int index)
-          => (1 - Utility.Random(randomSeed, (uint)index)
-                  * lengthRandomness)
-             * length / (P.Length / R.Length);
+          => (1 - Utility.Random(seed, (uint)index)
+                  * prof.lengthRandomness)
+             * prof.length / (P.Length / R.Length);
 
         float3 NoiseField(float3 p)
         {
-            var pos = p * noiseFrequency;
+            var pos = p * prof.noiseFrequency;
 
-            var offs1 = math.float3(0, 1, 0) * noiseSpeed * time;
+            var offs1 = math.float3(0, 1, 0) * prof.noiseSpeed * t;
             var offs2 = math.float3(3, 1, 7) * math.PI - offs1.zyx;
 
             float3 grad1, grad2;
             noise.snoise(pos + offs1, out grad1);
             noise.snoise(pos + offs2, out grad2);
 
-            return math.cross(grad1, grad2) * noiseAmplitude;
+            return math.cross(grad1, grad2) * prof.noiseAmplitude;
         }
 
         public void Execute()
@@ -107,16 +102,16 @@ namespace BurstWig
                     var v = V[i];
 
                     // Damping
-                    v *= math.exp(-damping * dt);
+                    v *= math.exp(-prof.damping * dt);
 
                     // Target position
                     var p_t = p_prev + math.normalizesafe(p_prev - p_his4) * seg;
 
                     // Acceleration (spring model)
-                    v += (p_t - p) * dt * spring;
+                    v += (p_t - p) * dt * prof.spring;
 
                     // Gravity
-                    v += (float3)gravity * dt;
+                    v += (float3)prof.gravity * dt;
 
                     // Noise field
                     v += NoiseField(p) * dt;

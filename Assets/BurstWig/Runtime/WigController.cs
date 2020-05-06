@@ -13,8 +13,8 @@ namespace BurstWig
         [SerializeField] MeshRenderer _source = null;
         [SerializeField] VisualEffect _target = null;
         [SerializeField, Range(8, 256)] int _segmentCount = 64;
-        [SerializeField] WigProfile _profile = null;
         [SerializeField] uint _randomSeed = 0;
+        [SerializeField] WigProfile _profile = WigProfile.DefaultProfile;
 
         #endregion
 
@@ -63,26 +63,21 @@ namespace BurstWig
 
         void Update()
         {
-            var job = new WigUpdateJob
+            var job = new UpdateJob
             {
+                // Buffers
                 R = _rootPoints,
                 P = _positionBuffer,
                 V = _velocityBuffer,
 
-                time = Time.time,
-                dt = Time.deltaTime,
+                // Settings
+                prof = _profile,
+                seed = _randomSeed,
 
+                // Current state
                 tf = (float4x4)_source.transform.localToWorldMatrix,
-                randomSeed = _randomSeed,
-
-                length = _profile.length,
-                lengthRandomness = _profile.lengthRandomness,
-                damping = _profile.damping,
-                spring = _profile.spring,
-                gravity = _profile.gravity,
-                noiseFrequency = _profile.noiseFrequency,
-                noiseAmplitude = _profile.noiseAmplitude,
-                noiseSpeed = _profile.noiseSpeed
+                t = Time.time,
+                dt = Time.deltaTime
             };
 
             job.Run();

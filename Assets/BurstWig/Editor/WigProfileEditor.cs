@@ -3,6 +3,7 @@ using UnityEditor;
 
 namespace BurstWig
 {
+    /*
     [CustomEditor(typeof(WigProfile))]
     sealed class WigProfileEditor : Editor
     {
@@ -72,4 +73,5 @@ namespace BurstWig
             ProjectWindowUtil.CreateAsset(asset, "New Wig Profile.asset");
         }
     }
+    */
 }

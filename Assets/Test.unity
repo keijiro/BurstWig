@@ -457,8 +457,16 @@ MonoBehaviour:
   _source: {fileID: 1991967225}
   _target: {fileID: 877443265}
   _segmentCount: 64
-  _profile: {fileID: 11400000, guid: 6d0b0102c3894ae46ba9134197fd859e, type: 2}
   _randomSeed: 0
+  _profile:
+    length: 4
+    lengthRandomness: 0.5
+    spring: 600
+    damping: 30
+    gravity: {x: 0, y: -8, z: 2}
+    noiseAmplitude: 0.3
+    noiseFrequency: 1
+    noiseSpeed: 0.1
 --- !u!4 &910259927
 Transform:
   m_ObjectHideFlags: 0
