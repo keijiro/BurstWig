@@ -212,7 +212,7 @@ MonoBehaviour:
   stopNaNs: 0
   taaSharpenStrength: 0.6
   physicalParameters:
-    m_Iso: 200
+    m_Iso: 1200
     m_ShutterSpeed: 0.016666668
     m_Aperture: 16
     m_BladeCount: 5
@@ -335,7 +335,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877443263}
   m_Enabled: 1
-  m_CastShadows: 0
+  m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 0
@@ -456,10 +456,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _source: {fileID: 1991967225}
   _target: {fileID: 877443265}
-  _segmentCount: 64
+  _segmentCount: 32
+  _maxTimeStep: 0.006
   _randomSeed: 0
   _profile:
-    length: 4
+    length: 5
     lengthRandomness: 0.5
     spring: 600
     damping: 50
@@ -542,7 +543,7 @@ GameObject:
   - component: {fileID: 1991967225}
   - component: {fileID: 1991967224}
   m_Layer: 0
-  m_Name: Template
+  m_Name: Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -561,15 +562,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionAmount:
-    x: 1
-    y: 1
-    z: 1
+    x: 5
+    y: 5
+    z: 5
   rotationAmount:
-    x: 90
-    y: 90
-    z: 90
-  frequency: 0.1
-  octaves: 2
+    x: 200
+    y: 200
+    z: 200
+  frequency: 0.04
+  octaves: 5
 --- !u!23 &1991967225
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -577,7 +578,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991967223}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -588,7 +589,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: b6742f9cb4f823c4d99a6d8d06365b56, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -724,8 +725,8 @@ MonoBehaviour:
   m_MaxDepthBias: 0.001
   m_ShadowResolution:
     m_Override: 512
-    m_UseOverride: 1
-    m_Level: 1
+    m_UseOverride: 0
+    m_Level: 2
   m_ShadowDimmer: 1
   m_VolumetricShadowDimmer: 1
   m_ShadowFadeDistance: 10000
