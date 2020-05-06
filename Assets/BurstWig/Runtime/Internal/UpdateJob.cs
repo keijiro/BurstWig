@@ -63,7 +63,7 @@ namespace BurstWig
             P[offs++] = math.float4(p, 1);
 
             // The second vertex (no dynamics)
-            p += R[vi].normal * seg;
+            p += math.mul(tf, math.float4(R[vi].normal, 0)).xyz * seg;
             P[offs++] = math.float4(p, 1);
 
             // Following vertices
