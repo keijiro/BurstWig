@@ -13,7 +13,6 @@ namespace BurstWig
         [SerializeField] MeshRenderer _source = null;
         [SerializeField] VisualEffect _target = null;
         [SerializeField, Range(8, 256)] int _segmentCount = 64;
-        [SerializeField] float _maxTimeStep = 0.006f;
         [SerializeField] uint _randomSeed = 0;
         [SerializeField] WigProfile _profile = WigProfile.DefaultProfile;
 
@@ -25,7 +24,6 @@ namespace BurstWig
         NativeArray<float4> _positionBuffer;
         NativeArray<float3> _velocityBuffer;
         Texture2D _positionMap;
-        float _time;
 
         #endregion
 
@@ -58,8 +56,6 @@ namespace BurstWig
             _target.SetTexture("PositionMap", _positionMap);
             _target.SetUInt("VertexCount", (uint)vcount);
             _target.SetUInt("SegmentCount", (uint)_segmentCount);
-
-            _time = Time.time;
         }
 
         void OnDestroy()
@@ -72,32 +68,24 @@ namespace BurstWig
 
         void Update()
         {
-            var nextTime = Time.time;
-
-            while (_time + _maxTimeStep < nextTime )
+            var job = new UpdateJob
             {
-                var job = new UpdateJob
-                {
-                    // Buffers
-                    R = _rootPoints,
-                    P = _positionBuffer,
-                    V = _velocityBuffer,
+                // Buffers
+                R = _rootPoints,
+                P = _positionBuffer,
+                V = _velocityBuffer,
 
-                    // Settings
-                    prof = _profile,
-                    seed = _randomSeed,
+                // Settings
+                prof = _profile,
+                seed = _randomSeed,
 
-                    // Current state
-                    tf = (float4x4)_source.transform.localToWorldMatrix,
-                    t = _time,
-                    dt = _maxTimeStep
-                };
+                // Current state
+                tf = (float4x4)_source.transform.localToWorldMatrix,
+                t = Time.time,
+                dt = Time.deltaTime
+            };
 
-                job.ScheduleParallel
-                    (_rootPoints.Length, 1, default(JobHandle)).Complete();
-
-                _time += _maxTimeStep;
-            }
+            job.Schedule(_rootPoints.Length, 1).Complete();
 
             _positionMap.LoadRawTextureData(_positionBuffer);
             _positionMap.Apply();

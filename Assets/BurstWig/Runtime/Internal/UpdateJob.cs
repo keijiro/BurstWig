@@ -5,7 +5,7 @@ using Unity.Mathematics;
 namespace BurstWig
 {
     [Unity.Burst.BurstCompile(CompileSynchronously = true)]
-    struct UpdateJob : IJobFor
+    struct UpdateJob : IJobParallelFor
     {
         // Buffers
         [NativeDisableParallelForRestrictionAttribute]
