@@ -1,6 +1,7 @@
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using XXHash = Klak.Math.XXHash;
 
 namespace BurstWig
 {
@@ -48,7 +49,7 @@ namespace BurstWig
             var scount = P.Length / R.Length;
 
             // Per-filament random segment length
-            var seg = math.frac((seed + vi * 0.012817f) * 632.8133f); // PRNG
+            var seg = new XXHash(seed).Float((uint)vi);
             seg = (1 - seg * prof.lengthRandomness) * prof.length / scount;
 
             // Noise field settings

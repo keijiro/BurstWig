@@ -1,20 +1,19 @@
 {
-    "scopedRegistries": [
-    {
-        "name": "Keijiro",
-            "url": "https://registry.npmjs.com",
-            "scopes": [
-                "jp.keijiro"
-            ]
-    }
-    ],
-    "dependencies": {
-        "com.unity.burst": "1.2.3",
-        "com.unity.timeline": "1.3.2",
-        "com.unity.ugui": "1.0.0",
-        "jp.keijiro.beta": "1.0.0",
-        "jp.keijiro.cmu-mocap": "1.0.0",
-        "jp.keijiro.kino.post-processing": "2.1.12",
-        "jp.keijiro.klak.motion": "1.0.1"
-    }
+  "scopedRegistries": [
+  {
+    "name": "Keijiro",
+    "url": "https://registry.npmjs.com",
+    "scopes": [ "jp.keijiro" ]
+  }
+  ],
+  "dependencies": {
+    "com.unity.burst": "1.2.3",
+    "com.unity.timeline": "1.3.2",
+    "com.unity.ugui": "1.0.0",
+    "jp.keijiro.beta": "1.0.0",
+    "jp.keijiro.cmu-mocap": "1.0.0",
+    "jp.keijiro.kino.post-processing": "2.1.12",
+    "jp.keijiro.klak.math": "1.0.1",
+    "jp.keijiro.klak.motion": "1.0.1"
+  }
 }
