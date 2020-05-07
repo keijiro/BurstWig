@@ -66,23 +66,19 @@ namespace BurstWig
             if (_positionMap != null) Destroy(_positionMap);
         }
 
-        void Update()
+        void LateUpdate()
         {
             var job = new UpdateJob
             {
                 // Buffers
-                R = _rootPoints,
-                P = _positionBuffer,
-                V = _velocityBuffer,
+                R = _rootPoints, P = _positionBuffer, V = _velocityBuffer,
 
                 // Settings
-                prof = _profile,
-                seed = _randomSeed,
+                prof = _profile, seed = _randomSeed,
 
                 // Current state
                 tf = (float4x4)_source.transform.localToWorldMatrix,
-                t = Time.time,
-                dt = Time.deltaTime
+                t = Time.time, dt = Time.deltaTime
             };
 
             job.Schedule(_rootPoints.Length, 1).Complete();

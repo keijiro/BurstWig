@@ -3,10 +3,14 @@ using UnityEditor;
 
 namespace BurstWig
 {
-    /*
-    [CustomEditor(typeof(WigProfile))]
-    sealed class WigProfileEditor : Editor
+    [CustomEditor(typeof(WigController))]
+    sealed class WigControllerEditor : Editor
     {
+        SerializedProperty _source;
+        SerializedProperty _target;
+        SerializedProperty _segmentCount;
+        SerializedProperty _randomSeed;
+
         SerializedProperty _length;
         SerializedProperty _lengthRandomness;
         SerializedProperty _spring;
@@ -29,19 +33,34 @@ namespace BurstWig
         {
             var finder = new PropertyFinder(serializedObject);
 
-            _length           = finder["length"];
-            _lengthRandomness = finder["lengthRandomness"];
-            _spring           = finder["spring"];
-            _damping          = finder["damping"];
-            _gravity          = finder["gravity"];
-            _noiseAmplitude   = finder["noiseAmplitude"];
-            _noiseFrequency   = finder["noiseFrequency"];
-            _noiseSpeed       = finder["noiseSpeed"];
+            _source       = finder["_source"];
+            _target       = finder["_target"];
+            _segmentCount = finder["_segmentCount"];
+            _randomSeed   = finder["_randomSeed"];
+
+            _length           = finder["_profile.length"];
+            _lengthRandomness = finder["_profile.lengthRandomness"];
+            _spring           = finder["_profile.spring"];
+            _damping          = finder["_profile.damping"];
+            _gravity          = finder["_profile.gravity"];
+            _noiseAmplitude   = finder["_profile.noiseAmplitude"];
+            _noiseFrequency   = finder["_profile.noiseFrequency"];
+            _noiseSpeed       = finder["_profile.noiseSpeed"];
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+
+            EditorGUILayout.PropertyField(_source);
+            EditorGUILayout.PropertyField(_target);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(_segmentCount);
+            EditorGUILayout.PropertyField(_randomSeed);
+
+            EditorGUILayout.Space();
 
             EditorGUILayout.Slider(_length, 0.1f, 5);
             EditorGUI.indentLevel++;
@@ -65,13 +84,5 @@ namespace BurstWig
 
             serializedObject.ApplyModifiedProperties();
         }
-
-        [MenuItem("Assets/Create/BurstWig/Wig Profile")]
-        public static void CreateWigProfileAsset()
-        {
-            var asset = ScriptableObject.CreateInstance<WigProfile>();
-            ProjectWindowUtil.CreateAsset(asset, "New Wig Profile.asset");
-        }
     }
-    */
 }
