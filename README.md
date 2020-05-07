@@ -1,6 +1,9 @@
 Burst Wig
 ---------
 
+![gif](https://i.imgur.com/FWMHNfQ.gif)
+![gif](https://i.imgur.com/z1HkqM2.gif)
+
 This project is an attempt to refurbish my old Wig effect (KvantWig) with the
 latest technology stack of Unity.
 
