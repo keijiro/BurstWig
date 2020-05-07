@@ -6,7 +6,7 @@ using VisualEffect = UnityEngine.VFX.VisualEffect;
 
 namespace BurstWig
 {
-    public class WigController : MonoBehaviour
+    public sealed partial class WigController : MonoBehaviour
     {
         #region Editable attributes
 
