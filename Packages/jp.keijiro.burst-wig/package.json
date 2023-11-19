@@ -1,0 +1,13 @@
+{
+  "author": "Keijiro Takahashi",
+  "dependencies": { "jp.keijiro.klak.math": "2.1.0" },
+  "description": "'Wig' effect with the C# Job System and the Burst compiler",
+  "displayName": "Burst Wig",
+  "keywords": [ "unity" ],
+  "license": "Unlicense",
+  "name": "jp.keijiro.burst-wig",
+  "repository": "github:keijiro/BurstWig",
+  "unity": "2022.3",
+  "unityRelease": "0f1",
+  "version": "1.0.0"
+}
