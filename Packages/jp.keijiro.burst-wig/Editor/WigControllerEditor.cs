@@ -7,7 +7,6 @@ namespace BurstWig {
 sealed class WigControllerEditor : Editor
 {
     SerializedProperty _source;
-    SerializedProperty _target;
     SerializedProperty _segmentCount;
     SerializedProperty _randomSeed;
 
@@ -34,7 +33,6 @@ sealed class WigControllerEditor : Editor
         var finder = new PropertyFinder(serializedObject);
 
         _source       = finder["_source"];
-        _target       = finder["_target"];
         _segmentCount = finder["_segmentCount"];
         _randomSeed   = finder["_randomSeed"];
 
@@ -53,7 +51,6 @@ sealed class WigControllerEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(_source);
-        EditorGUILayout.PropertyField(_target);
 
         EditorGUILayout.Space();
 

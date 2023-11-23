@@ -11,7 +11,6 @@ public sealed partial class WigController : MonoBehaviour
     #region Editable attributes
 
     [SerializeField] MeshRenderer _source = null;
-    [SerializeField] VisualEffect _target = null;
     [SerializeField, Range(8, 256)] int _segmentCount = 64;
     [SerializeField] uint _randomSeed = 0;
     [SerializeField] WigProfile _profile = WigProfile.DefaultProfile;
@@ -52,10 +51,6 @@ public sealed partial class WigController : MonoBehaviour
 
         _positionMap = new Texture2D
           (_segmentCount, vcount, TextureFormat.RGBAFloat, false);
-
-        _target.SetTexture("PositionMap", _positionMap);
-        _target.SetUInt("VertexCount", (uint)vcount);
-        _target.SetUInt("SegmentCount", (uint)_segmentCount);
     }
 
     void OnDestroy()

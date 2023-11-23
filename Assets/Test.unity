@@ -1457,6 +1457,8 @@ GameObject:
   - component: {fileID: 877443266}
   - component: {fileID: 877443265}
   - component: {fileID: 877443264}
+  - component: {fileID: 877443268}
+  - component: {fileID: 877443267}
   m_Layer: 0
   m_Name: Wig VFX
   m_TagString: Untagged
@@ -1532,10 +1534,10 @@ VisualEffect:
       m_Array:
       - m_Value: 128
         m_Name: SegmentCount
-        m_Overridden: 1
+        m_Overridden: 0
       - m_Value: 128
         m_Name: VertexCount
-        m_Overridden: 1
+        m_Overridden: 0
     m_Int:
       m_Array: []
     m_Matrix4x4f:
@@ -1548,7 +1550,7 @@ VisualEffect:
       m_Array:
       - m_Value: {fileID: 0}
         m_Name: PositionMap
-        m_Overridden: 1
+        m_Overridden: 0
     m_Bool:
       m_Array: []
 --- !u!4 &877443266
@@ -1566,6 +1568,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &877443267
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877443263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ffbc397cb7829469b272d5fa748d61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Source: {fileID: 910259926}
+  _positionMapProperty:
+    m_Name: PositionMap
+  _vertexCountProperty:
+    m_Name: VertexCount
+  _segmentCountProperty:
+    m_Name: SegmentCount
+--- !u!114 &877443268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877443263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 0
+  m_Bindings:
+  - {fileID: 877443267}
+  m_VisualEffect: {fileID: 877443265}
 --- !u!1 &910259925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,7 +1633,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _source: {fileID: 1109510131}
-  _target: {fileID: 877443265}
   _segmentCount: 32
   _randomSeed: 0
   _profile:
