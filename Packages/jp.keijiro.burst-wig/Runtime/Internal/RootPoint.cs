@@ -1,10 +1,11 @@
 using Unity.Mathematics;
 
-namespace BurstWig
+namespace BurstWig {
+
+struct RootPoint
 {
-    struct RootPoint
-    {
-        public float3 position;
-        public float3 normal;
-    }
+    public float3 position;
+    public float3 normal;
 }
+
+} // namespace BurstWig
