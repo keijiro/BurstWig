@@ -2,7 +2,8 @@
     "name": "BurstWig.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:04bd0c09798e58141bf209dc2d4c868e"
+        "GUID:04bd0c09798e58141bf209dc2d4c868e",
+        "GUID:10ffe217b99824b2abaecc5725e7cbd5"
     ],
     "includePlatforms": [
         "Editor"
