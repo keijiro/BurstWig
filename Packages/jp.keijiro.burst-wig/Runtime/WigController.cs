@@ -11,7 +11,7 @@ public sealed partial class WigController : MonoBehaviour
     #region Editable attributes
 
     [SerializeField] MeshRenderer _source = null;
-    [SerializeField, Range(8, 256)] int _segmentCount = 64;
+    [SerializeField, Range(8, 256)] int _segmentCount = 32;
     [SerializeField] uint _randomSeed = 0;
     [SerializeField] WigProfile _profile = WigProfile.DefaultProfile;
 

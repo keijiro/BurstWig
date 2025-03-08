@@ -16,13 +16,13 @@ public struct WigProfile
 
     static public WigProfile DefaultProfile => new WigProfile
     {
-        length = 1,
+        length = 1.7f,
         lengthRandomness = 0.5f,
-        spring = 600,
-        damping = 30,
-        gravity = new Vector3(0, -8, 2),
-        noiseAmplitude = 5,
-        noiseFrequency = 1,
+        spring = 150,
+        damping = 20,
+        gravity = new Vector3(0, -2, 2),
+        noiseAmplitude = 0.4f,
+        noiseFrequency = 1.3f,
         noiseSpeed = 0.1f
     };
 }
