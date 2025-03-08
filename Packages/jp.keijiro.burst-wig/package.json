@@ -1,6 +1,9 @@
 {
   "author": "Keijiro Takahashi",
-  "dependencies": { "jp.keijiro.klak.math": "2.1.0" },
+  "dependencies": {
+    "jp.keijiro.klak.math": "2.1.0",
+    "jp.keijiro.klutter-tools": "2.0.0"
+  },
   "description": "'Wig' effect with the C# Job System and the Burst compiler",
   "displayName": "Burst Wig",
   "keywords": [ "unity" ],

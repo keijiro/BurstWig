@@ -9,11 +9,11 @@
     }
   ],
   "dependencies": {
-    "com.unity.timeline": "1.7.6",
+    "com.unity.render-pipelines.high-definition": "17.0.4",
+    "com.unity.timeline": "1.8.8",
     "jp.keijiro.beta": "1.0.2",
     "jp.keijiro.cmu-mocap": "1.0.0",
-    "jp.keijiro.kino.post-processing": "2.1.15",
     "jp.keijiro.klak.motion": "1.1.0",
-    "jp.keijiro.vfxgraphassets": "1.2.0"
+    "jp.keijiro.vfxgraphassets": "3.8.0"
   }
 }
