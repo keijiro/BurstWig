@@ -169,8 +169,7 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "jp.keijiro.klak.math": "2.1.0",
-        "jp.keijiro.klutter-tools": "2.0.0"
+        "jp.keijiro.klak.math": "2.1.0"
       }
     },
     "jp.keijiro.cmu-mocap": {
@@ -200,7 +199,7 @@
     },
     "jp.keijiro.klutter-tools": {
       "version": "2.0.0",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://registry.npmjs.com"
