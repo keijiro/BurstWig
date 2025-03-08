@@ -1994,8 +1994,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 910259926}
-        m_TargetAssemblyTypeName: BurstWig.WigController, Assembly-CSharp
-        m_MethodName: set_length
+        m_TargetAssemblyTypeName: BurstWig.WigController, BurstWig.Runtime
+        m_MethodName: set_Length
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2194,7 +2194,7 @@ GameObject:
   - component: {fileID: 1769852152}
   - component: {fileID: 1769852151}
   m_Layer: 0
-  m_Name: Default Volume
+  m_Name: Postprocess
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
