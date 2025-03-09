@@ -1200,11 +1200,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Source: {fileID: 910259926}
-  _positionMapProperty:
+  PositionMapProperty:
     m_Name: PositionMap
-  _vertexCountProperty:
+  VertexCountProperty:
     m_Name: VertexCount
-  _segmentCountProperty:
+  SegmentCountProperty:
     m_Name: SegmentCount
 --- !u!114 &877443268
 MonoBehaviour:

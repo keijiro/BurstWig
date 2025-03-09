@@ -10,41 +10,29 @@ public sealed class VFXWigBinder : VFXBinderBase
 {
     public WigController Source = null;
 
-    public string PositionMapProperty
-      { get => (string)_positionMapProperty;
-        set => _positionMapProperty = value; }
+    [VFXPropertyBinding("UnityEngine.Texture")]
+    public ExposedProperty PositionMapProperty = "PositionMap";
 
-    public string VertexCountProperty
-      { get => (string)_vertexCountProperty;
-        set => _vertexCountProperty = value; }
+    [VFXPropertyBinding("System.UInt32")]
+    public ExposedProperty VertexCountProperty = "VertexCount";
 
-    public string SegmentCountProperty
-      { get => (string)_segmentCountProperty;
-        set => _segmentCountProperty = value; }
-
-    [VFXPropertyBinding("UnityEngine.Texture"), SerializeField]
-    ExposedProperty _positionMapProperty = "PositionMap";
-
-    [VFXPropertyBinding("System.UInt32"), SerializeField]
-    ExposedProperty _vertexCountProperty = "VertexCount";
-
-    [VFXPropertyBinding("System.UInt32"), SerializeField]
-    ExposedProperty _segmentCountProperty = "SegmentCount";
+    [VFXPropertyBinding("System.UInt32")]
+    public ExposedProperty SegmentCountProperty = "SegmentCount";
 
     public override bool IsValid(VisualEffect component)
       => Source != null &&
-         component.HasTexture(_positionMapProperty) &&
-         component.HasUInt(_vertexCountProperty) &&
-         component.HasUInt(_segmentCountProperty);
+         component.HasTexture(PositionMapProperty) &&
+         component.HasUInt(VertexCountProperty) &&
+         component.HasUInt(SegmentCountProperty);
 
     public override void UpdateBinding(VisualEffect component)
     {
-        component.SetTexture(_positionMapProperty, Source.PositionMap);
-        component.SetUInt(_vertexCountProperty, (uint)Source.VertexCount);
-        component.SetUInt(_segmentCountProperty, (uint)Source.SegmentCount);
+        component.SetTexture(PositionMapProperty, Source.PositionMap);
+        component.SetUInt(VertexCountProperty, (uint)Source.VertexCount);
+        component.SetUInt(SegmentCountProperty, (uint)Source.SegmentCount);
     }
 
-    public override string ToString() => $"Wig : {_positionMapProperty}";
+    public override string ToString() => $"Wig : {PositionMapProperty}";
 }
 
 } // namespace BurstWig
