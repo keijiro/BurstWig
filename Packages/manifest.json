@@ -9,11 +9,12 @@
     }
   ],
   "dependencies": {
-    "com.unity.render-pipelines.high-definition": "17.0.4",
-    "com.unity.timeline": "1.8.8",
-    "jp.keijiro.beta": "1.0.2",
-    "jp.keijiro.cmu-mocap": "1.0.0",
-    "jp.keijiro.klak.motion": "1.1.0",
-    "jp.keijiro.vfxgraphassets": "3.8.0"
+    "com.unity.render-pipelines.high-definition": "17.3.0",
+    "com.unity.timeline": "1.8.12",
+    "jp.keijiro.beta": "1.0.3",
+    "jp.keijiro.cmu-mocap": "1.0.1",
+    "jp.keijiro.klak.motion": "1.1.1",
+    "jp.keijiro.shadergraphassets": "2.5.3",
+    "jp.keijiro.vfxgraphassets": "3.10.1"
   }
 }
