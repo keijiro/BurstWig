@@ -9,6 +9,8 @@
     }
   ],
   "dependencies": {
+    "com.unity.ai.assistant": "2.9.0-pre.1",
+    "com.unity.ai.inference": "2.6.1",
     "com.unity.inputsystem": "1.19.0",
     "com.unity.render-pipelines.high-definition": "17.3.0",
     "com.unity.timeline": "1.8.12",
