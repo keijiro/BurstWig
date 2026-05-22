@@ -9,6 +9,7 @@
     }
   ],
   "dependencies": {
+    "com.unity.inputsystem": "1.19.0",
     "com.unity.render-pipelines.high-definition": "17.3.0",
     "com.unity.timeline": "1.8.12",
     "jp.keijiro.beta": "1.0.3",
