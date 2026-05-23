@@ -13,5 +13,10 @@ Desktop.ini
 /.utmp
 /mono_crash.*.json
 /Xcode
+/Web
+
+/*.app
+/*.exe
 /*.apk
+/*.tgz
 /*_DoNotShip
