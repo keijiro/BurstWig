@@ -37,7 +37,7 @@ GraphicsSettings:
   m_PreloadShadersBatchTimeLimit: -1
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000,
     type: 0}
-  m_CustomRenderPipeline: {fileID: 11400000, guid: d984979c78e2d6641a8b411aad77babd,
+  m_CustomRenderPipeline: {fileID: 11400000, guid: 8f33a5a6c5a7249ce89fa7ba9d655f50,
     type: 2}
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 0, z: 1}
@@ -61,6 +61,10 @@ GraphicsSettings:
   m_RenderPipelineGlobalSettingsMap:
     UnityEngine.Rendering.HighDefinition.HDRenderPipeline: {fileID: 11400000, guid: 2bad9dabdaa29084d974e13df6a28a3d,
       type: 2}
+    UnityEngine.Rendering.Universal.UniversalRenderPipeline: {fileID: 11400000, guid: 4dbe9220a2bfd4c7b8dce4294c495580,
+      type: 2}
+  m_ShaderBuildSettings:
+    keywordDeclarationOverrides: []
   m_LightsUseLinearIntensity: 1
   m_LightsUseColorTemperature: 1
   m_LogWhenShaderIsCompiled: 0
